@@ -1,0 +1,38 @@
+const { webkit } = require('playwright');
+const expect = require('expect');
+const { addAttach } = require("jest-html-reporters/helper");
+
+let browser;
+let page;
+let data
+
+
+beforeAll(async () => {
+  browser = await webkit.launch({
+    headless: false , slowMo: 50 
+  });
+})
+
+beforeEach(async () => {
+  context = await browser.newContext();
+  page = await browser.newPage();
+});
+
+
+afterAll(async () => {
+  await context.close();
+  await browser.close();
+})
+
+afterEach(async () => {
+  await page.close();
+  await addAttach(data, "test 1", this.global);
+});
+
+it('should display correct browser', async () => {
+  await page.goto('http://whatsmyuseragent.org/');
+  data = await page.screenshot({ path: `example.png` });
+})
+
+
+
